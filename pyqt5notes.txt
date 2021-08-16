@@ -1,0 +1,11 @@
+## Bring up the GUI designer
+
+Pyqt5-tools designer
+
+
+
+#Convert the .ui file to python code
+
+
+pyuic5 -x gui.ui -o test.py
+
