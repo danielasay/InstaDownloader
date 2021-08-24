@@ -9,7 +9,11 @@ from itertools import dropwhile, takewhile
 import time
 import shutil as sh
 
-# Create instance of the class
+### Get cwd
+
+work_dir = os.getcwd()
+
+# Create instance of the Instaloader class
 
 meme_bot = instaloader.Instaloader()
 
@@ -55,7 +59,7 @@ end_day = end_day + 1
 
 ## populate range of dates
 
-start_date = datetime(2021, 8, 22)
+start_date = datetime(2021, 8, 23)
 
 
 end_date = datetime(end_year, end_month, end_day)
@@ -65,11 +69,18 @@ end_date = datetime(end_year, end_month, end_day)
 
 print("Downloading posts between " + str(start_date) + " and " + str(end_date) + "...")
 
-time.sleep(4)
+time.sleep(2)
 
-for post in takewhile(lambda p: p.date > start_date, dropwhile(lambda p: p.date > end_date, posts)):
-    print(post.date)
-    meme_bot.download_post(post, pages[0] + str(dt.date.today()))
+dir_list = []
+
+for name in range(len(pages)):
+	new_dir = pages[name] + "_" + today
+	os.makedirs(new_dir)
+	dir_list.append(new_dir)
+	for post in takewhile(lambda p: p.date > start_date, dropwhile(lambda p: p.date > end_date, posts)):
+		print(post.date)
+		for i in range(len(dir_list)):
+			meme_bot.download_post(post, dir_list[i])
 
 print("Finished downloading!")
 
@@ -79,12 +90,17 @@ time.sleep(2)
 
 print("Sorting media...")
 
-time.sleep(2)
+time.sleep(3)
 
-os.chdir("upworthy2021-08-23") ### make this dynamic
-os.makedirs("Captions")
-os.makedirs("Photos")
-os.makedirs("Videos")
+### Sort the media from all of the instagram pages
+
+for i in range(len(dir_list)):
+	os.chdir(dir_list[i]) 
+	os.makedirs("Captions")
+	os.makedirs("Photos")
+	os.makedirs("Videos")
+	os.chdir(work_dir)
+
 
 # Get list of all downloaded posts and turn them into strings
 
@@ -108,9 +124,7 @@ print("Done!")
 
 
 
-
-#
-
+#pages[0] + str(dt.date.today())
 
 
 
