@@ -29,15 +29,25 @@ password = stdiomask.getpass()
 meme_input = input("Great! Now enter the names of the pages you want to see memes from, separated by spaces: ")
 pages = meme_input.split(' ')
 
+# Get the start date for posts range from user
+
+while True:
+	input_date = input("How far back do you want to see posts from? Please enter in format mm/dd/yyyy: ")
+	try:
+		start_date = datetime.strptime(input_date, '%m/%d/%Y')
+	except ValueError:
+		print("Invalid date entered! Please try again.")
+		time.sleep(2)
+		continue
+	else:
+		break
+
 #login to user's instagram account
 
 print("Logging into your Instagram account...")
 
 meme_bot.login(username, password)
 
-# Get the start date for posts range from user
-
-#input_date = input("How far back do you want to see posts from? Please enter in format mm/dd/yyyy: ")
 
 ### Get today's date and change it into an integer
 
@@ -52,11 +62,6 @@ end_month = int(end_month)
 end_day = today[8:10]
 end_day = int(end_day)
 end_day = end_day + 1
-
-## populate range of dates
-
-start_date = datetime(2021, 8, 24)
-
 
 end_date = datetime(end_year, end_month, end_day)
 
@@ -120,11 +125,11 @@ for j in range(len(dir_list)):
 			os.remove(i)
 	os.chdir(work_dir)
 
+time.sleep(3)
+
+print("Done! Enjoy!")
+
 time.sleep(2)
-
-print("Done! Enjoy your memes")
-
-
 
 
 
