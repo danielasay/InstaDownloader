@@ -1,4 +1,4 @@
-# Import instaloader module
+# Import necessary libraries
 
 import instaloader
 import stdiomask
@@ -35,10 +35,6 @@ print("Logging into your Instagram account...")
 
 meme_bot.login(username, password)
 
-## Load profile and get the posts
-
-posts = instaloader.Profile.from_username(meme_bot.context, pages[0]).get_posts()
-
 # Get the start date for posts range from user
 
 #input_date = input("How far back do you want to see posts from? Please enter in format mm/dd/yyyy: ")
@@ -59,17 +55,19 @@ end_day = end_day + 1
 
 ## populate range of dates
 
-start_date = datetime(2021, 8, 23)
+start_date = datetime(2021, 8, 24)
 
 
 end_date = datetime(end_year, end_month, end_day)
 
 
-## Check the date of each post and download the posts that are in appropriate range
+## Show user the specified range
 
 print("Downloading posts between " + str(start_date) + " and " + str(end_date) + "...")
 
 time.sleep(2)
+
+## Download posts and put them in their respective directories
 
 dir_list = []
 
@@ -77,14 +75,14 @@ for name in range(len(pages)):
 	new_dir = pages[name] + "_" + today
 	os.makedirs(new_dir)
 	dir_list.append(new_dir)
+	posts = instaloader.Profile.from_username(meme_bot.context, pages[name]).get_posts()
 	for post in takewhile(lambda p: p.date > start_date, dropwhile(lambda p: p.date > end_date, posts)):
 		print(post.date)
-		for i in range(len(dir_list)):
-			meme_bot.download_post(post, dir_list[i])
+		meme_bot.download_post(post, new_dir)
 
 print("Finished downloading!")
 
-### Navigate to newly created directory and create new sub directories
+# Give time between steps 
 
 time.sleep(2)
 
@@ -92,7 +90,7 @@ print("Sorting media...")
 
 time.sleep(3)
 
-### Sort the media from all of the instagram pages
+### Navigate to newly created directory and create new sub directories of all relevant media
 
 for i in range(len(dir_list)):
 	os.chdir(dir_list[i]) 
@@ -102,25 +100,29 @@ for i in range(len(dir_list)):
 	os.chdir(work_dir)
 
 
-# Get list of all downloaded posts and turn them into strings
+# Get list of all downloaded posts and turn them into strings. Move media to appropriate folders.
 
-data_list = os.listdir()
+data_list = []
 
-for i in data_list:
-	i = str(i)
-	extension = i[-3:]
-	if extension == "mp4":
-		sh.move(i, "Videos")
-	elif extension == "jpg":
-		sh.move(i, "Photos")
-	elif extension == "txt":
-		sh.move(i, "Captions")
-	elif extension == ".xz":
-		os.remove(i)
+for j in range(len(dir_list)):
+	os.chdir(dir_list[j])
+	data_list = os.listdir()
+	for i in data_list:
+		i = str(i)
+		extension = i[-3:]
+		if extension == "mp4":
+			sh.move(i, "Videos")
+		elif extension == "jpg":
+			sh.move(i, "Photos")
+		elif extension == "txt":
+			sh.move(i, "Captions")
+		elif extension == ".xz":
+			os.remove(i)
+	os.chdir(work_dir)
 
+time.sleep(2)
 
-
-print("Done!")
+print("Done! Enjoy your memes")
 
 
 
