@@ -8,6 +8,7 @@ from datetime import datetime
 from itertools import dropwhile, takewhile
 import time
 import shutil as sh
+from fpdf import FPDF
 
 ### Get cwd
 
@@ -29,7 +30,7 @@ password = stdiomask.getpass()
 meme_input = input("Great! Now enter the names of the pages you want to see memes from, separated by spaces: ")
 pages = meme_input.split(' ')
 
-# Get the start date for posts range from user
+# Get the start date for posts range from user, check for date validity
 
 while True:
 	input_date = input("How far back do you want to see posts from? Please enter in format mm/dd/yyyy: ")
@@ -42,6 +43,33 @@ while True:
 	else:
 		break
 
+# Ask the user if they want today to be the upper range. If today is used, change it to integer
+
+while True:
+	use_today = input("Do you want today to be the upper limit of your range? If so, type yes. \nIf not, please enter the date in mm/dd/yyyy format: ")
+	if use_today == "yes" or use_today == "y" or use_today == "Yes" or use_today == "YES":
+		today = dt.date.today()
+		today = str(today)
+		end_year = today[0:4]
+		end_year = int(end_year)
+		end_month = today[6:7]
+		end_month = int(end_month)
+		end_day = today[8:10]
+		end_day = int(end_day)
+		end_day = end_day + 1
+		end_date = datetime(end_year, end_month, end_day)
+		break
+	elif use_today != "yes" or use_today != "y" or use_today != "Yes" or use_today != "YES":
+		try:
+			end_date = datetime.strptime(use_today, '%m/%d/%Y')
+		except ValueError:
+			print("Invalid input! Please try again.")
+			time.sleep(2)
+			continue
+	else:
+		break
+
+
 #login to user's instagram account
 
 print("Logging into your Instagram account...")
@@ -50,20 +78,6 @@ meme_bot.login(username, password)
 
 
 ### Get today's date and change it into an integer
-
-today = dt.date.today()
-today = str(today)
-end_year = today[0:4]
-end_year = int(end_year)
-
-end_month = today[6:7]
-end_month = int(end_month)
-
-end_day = today[8:10]
-end_day = int(end_day)
-end_day = end_day + 1
-
-end_date = datetime(end_year, end_month, end_day)
 
 
 ## Show user the specified range
@@ -93,7 +107,7 @@ time.sleep(2)
 
 print("Sorting media...")
 
-time.sleep(3)
+time.sleep(2)
 
 ### Navigate to newly created directory and create new sub directories of all relevant media
 
@@ -125,16 +139,9 @@ for j in range(len(dir_list)):
 			os.remove(i)
 	os.chdir(work_dir)
 
-time.sleep(3)
+time.sleep(2)
 
 print("Done! Enjoy!")
 
 time.sleep(2)
-
-
-
-
-
-
-
 
