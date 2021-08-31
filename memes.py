@@ -8,7 +8,7 @@ from datetime import datetime
 from itertools import dropwhile, takewhile
 import time
 import shutil as sh
-from fpdf import FPDF
+import glob
 
 ### Get cwd
 
@@ -141,7 +141,50 @@ for j in range(len(dir_list)):
 
 time.sleep(2)
 
+
+## Go through Videos and Photos to check for any that match. If so, remove the Photo
+
+print("Removing video thumbnails...")
+
+video_timestamp = []
+
+for j in range(len(dir_list)):
+	os.chdir(dir_list[j])
+	page_dir = os.getcwd()
+	os.chdir(page_dir)
+	os.chdir("Videos")
+	video_list = os.listdir()
+	for i in video_list:
+		video_timestamp.append(i[0:19])
+	os.chdir(page_dir)
+	os.chdir("Photos")
+	for timestamp in range(len(video_timestamp)):
+		for file in os.listdir():
+			if file.startswith(video_timestamp[timestamp]):
+				os.remove(file)
+	os.chdir(work_dir)
+
+
+time.sleep(2)
+
 print("Done! Enjoy!")
 
 time.sleep(2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
