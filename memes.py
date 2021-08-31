@@ -8,7 +8,7 @@ from datetime import datetime
 from itertools import dropwhile, takewhile
 import time
 import shutil as sh
-import glob
+
 
 ### Get cwd
 
@@ -48,7 +48,7 @@ while True:
 while True:
 	use_today = input("Do you want today to be the upper limit of your range? If so, type yes. \nIf not, please enter the date in mm/dd/yyyy format: ")
 	if use_today == "yes" or use_today == "y" or use_today == "Yes" or use_today == "YES":
-		today = dt.date.today()
+		today = dt.date.today() + dt.timedelta(days=1)
 		today = str(today)
 		end_year = today[0:4]
 		end_year = int(end_year)
@@ -56,7 +56,6 @@ while True:
 		end_month = int(end_month)
 		end_day = today[8:10]
 		end_day = int(end_day)
-		end_day = end_day + 1
 		end_date = datetime(end_year, end_month, end_day)
 		break
 	elif use_today != "yes" or use_today != "y" or use_today != "Yes" or use_today != "YES":
@@ -75,10 +74,6 @@ while True:
 print("Logging into your Instagram account...")
 
 meme_bot.login(username, password)
-
-
-### Get today's date and change it into an integer
-
 
 ## Show user the specified range
 
