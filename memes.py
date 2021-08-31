@@ -162,6 +162,25 @@ for j in range(len(dir_list)):
 
 time.sleep(2)
 
+# Change the photo extensions from jpg to png
+
+print("Modifying photo extensions...")
+
+photo_base = []
+
+for j in range(len(dir_list)):
+	os.chdir(dir_list[j])
+	page_dir = os.getcwd()
+	os.chdir(page_dir)
+	os.chdir("Photos")
+	photo_list = os.listdir()
+	for i in glob.glob("*.jpg"):
+		os.rename(i, i[:-3] + "png")
+	os.chdir(work_dir)
+
+
+time.sleep(2)
+
 print("Done! Enjoy!")
 
 time.sleep(2)
