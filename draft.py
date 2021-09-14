@@ -8,7 +8,6 @@ from datetime import datetime
 from itertools import dropwhile, takewhile
 import time
 import shutil as sh
-import glob
 from tkinter import *
 from PIL import ImageTk, Image
 
