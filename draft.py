@@ -2,7 +2,7 @@
 
 import instaloader
 import stdiomask
-import os
+import os, os.path
 import datetime as dt
 from datetime import datetime
 from itertools import dropwhile, takewhile
@@ -75,7 +75,12 @@ class post_downloader():
 				break
 			elif use_today != "yes" or use_today != "y" or use_today != "Yes" or use_today != "YES":
 				try:
+					today = dt.datetime.today()
 					end_date = datetime.strptime(use_today, '%m/%d/%Y')
+					if end_date > today:
+						print("You put a date from the future! Please try again.")
+						time.sleep(2)
+						continue
 				except ValueError:
 					print("Invalid input! Please try again.")
 					time.sleep(2)
@@ -83,6 +88,7 @@ class post_downloader():
 			else:
 				break
 
+		time.sleep(1)		
 		return end_date, start_date
 
 	# Download posts from the pages specified by user.
@@ -110,7 +116,7 @@ class post_downloader():
 		return dir_list
 
 
-	# Sort the vidoes and photos into different directories
+	# Sort the vidoes and photos into different directories. Remove thumbnails of videos from photos dir
 
 	def sort_media(self, dir_list):
 		print("Sorting media...")
@@ -122,9 +128,6 @@ class post_downloader():
 			os.makedirs("Photos")
 			os.makedirs("Videos")
 			os.chdir(work_dir)
-
-		# Get list of all downloaded posts and turn them into strings. Move media to appropriate folders.
-		data_list = []
 		for j in range(len(dir_list)):
 			os.chdir(dir_list[j])
 			data_list = os.listdir()
@@ -156,8 +159,27 @@ class post_downloader():
 					if file.startswith(video_timestamp[timestamp]):
 						os.remove(file)
 			os.chdir(work_dir)
+
+	# tell user how many photos and videos from each page
+
+	def count_media(self, dir_list):
+		work_dir = os.getcwd()		
+		for j in range(len(dir_list)):
+			os.chdir(dir_list[j])
+			page_dir = os.getcwd()
+			os.chdir(page_dir)
+			os.chdir("Photos")
+			photo_num = len([name for name in os.listdir('.') if os.path.isfile(name)])
+			os.chdir(page_dir)
+			os.chdir("Videos")
+			video_num = len([name for name in os.listdir('.') if os.path.isfile(name)])
+			print(dir_list[j][:-11] + " has " + str(photo_num) + " photos and " + str(video_num) + " videos." )
+			os.chdir(work_dir)
 		time.sleep(1)
 		print("Done!")
+
+
+
 
 
 
@@ -172,6 +194,8 @@ dates = download_posts.get_dates()
 posts = download_posts.get_posts(dates[0], dates[1])
 
 download_posts.sort_media(posts)
+
+download_posts.count_media(posts)
 
 
 
