@@ -8,8 +8,6 @@ from datetime import datetime
 from itertools import dropwhile, takewhile
 import time
 import shutil as sh
-from tkinter import *
-from PIL import ImageTk, Image
 
 # Create the post_downloader class
 
@@ -39,6 +37,7 @@ class post_downloader():
 			else:
 				break
 		print("Successfully logged in!")
+		time.sleep(1)
 
 
 	# get the date range from the user
@@ -47,8 +46,13 @@ class post_downloader():
 	def get_dates(self):
 		while True:
 			input_date = input("How far back do you want to see posts from? Please enter in format mm/dd/yyyy: ")
+			today = dt.datetime.today()
 			try:
 				start_date = datetime.strptime(input_date, '%m/%d/%Y')
+				if start_date > today:
+					print("You put a date from the future! Please try again.")
+					time.sleep(2)
+					continue
 			except ValueError:
 				print("Invalid date entered! Please try again.")
 				time.sleep(2)
@@ -169,7 +173,6 @@ posts = download_posts.get_posts(dates[0], dates[1])
 
 download_posts.sort_media(posts)
 
-#download_posts.gui(pages)
 
 
 
